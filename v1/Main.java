@@ -28,8 +28,9 @@ public class Main {
 	public static void main(String[] args) {
 		logger.info("Starting program");
 		ph = new ProjectHandler();
-		ph.createChild(102);
-		ph.createChild(102);
+		
+		ph.createNewProject("/home/jamie/Code/Perl");
+		ph.createNewChild(203,"/home/jamie/testing2");
 		ph.showProjects();
 	}
 }

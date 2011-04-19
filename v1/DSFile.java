@@ -34,6 +34,6 @@ public class DSFile {
 	}
 	
 	public String getFileString() {
-		return (directory + "/" + name + "." + extension);
+		return (name + "." + extension);
 	}
 }

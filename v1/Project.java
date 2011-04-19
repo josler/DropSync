@@ -17,6 +17,7 @@ public class Project {
 	public Project() {
 		files = new ArrayList<DSFile>();
 		childProjects = new ArrayList<Project>();
+		masterID = 0;
 	}
 	
 	
@@ -54,6 +55,11 @@ public class Project {
 		DSFile t = new DSFile(file,directory);
 		files.add(t);
 	}
+	
+	public void updateFiles() {
+		for (int f = 0; f < files.size(); f++)
+			files.get(f).setDirectory(directory);
+	}
 
 	public ArrayList<DSFile> getFiles() {
 		return files;
@@ -64,10 +70,10 @@ public class Project {
 	 */
 	public void showProject() {
 		System.out.println(name + "(" + ID + ") : " + directory);
-		//System.out.print("Files: ");
-		//for (int f = 0; f < files.size(); f++)
-		//	System.out.print(files.get(f).getFileString() + " ");
-		System.out.print("Child projects: ");
+		System.out.print("Files: ");
+		for (int f = 0; f < files.size(); f++)
+			System.out.print(files.get(f).getFileString() + " ");
+		System.out.print("\nChild projects: ");
 		for (int f = 0; f < childProjects.size(); f++)
 			System.out.print(childProjects.get(f).getName() + "(" + childProjects.get(f).getID() + ")");
 		System.out.println("\n");
