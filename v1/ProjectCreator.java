@@ -118,39 +118,6 @@ public class ProjectCreator {
 				Main.logger.warning("File already exists");
 			}
 		}
-		createSettingsFile(p);
 
-	}
-	
-	/**
-	 * Creates the proper settings file for the new project.
-	 * @param p the project.
-	 */
-	private void createSettingsFile(Project p) {
-		File f = new File(p.getDirectory() + "/dss/projset.dss");
-		//f.mkdirs();
-		FileWriter fw;
-		PrintWriter pw = null;
-		try {
-			f.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			fw = new FileWriter(f);
-			pw = new PrintWriter(fw);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		pw.println("#p");
-		pw.println("#n:" + p.getName());
-		pw.println("#i:" + p.getID());
-		pw.println("#m:" + p.getMasterID());
-		pw.println("#d:" + p.getDirectory());
-		for (int i = 0; i < p.files.size(); i++) {
-			pw.println("#f:" + p.files.get(i).getFileString());
-		}
-		pw.close();
-		
 	}
 }

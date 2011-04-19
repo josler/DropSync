@@ -15,6 +15,7 @@ public class ProjectHandler {
 	private ArrayList<Project> projects;
 	private static int idmax;
 	private ProjectCreator pc;
+	SettingsWriter sw = new SettingsWriter();
 	
 	public ProjectHandler() {
 		importProjects();
@@ -54,7 +55,6 @@ public class ProjectHandler {
 	 * Creates a new child of an existing project.
 	 * 
 	 * @param ID the id of the project to be copied.
-	 * @return a 0 indicates child successfully created.
 	 */
 	public void createNewChild(int ID, String dir) {
 		Project proj = null;
@@ -78,21 +78,8 @@ public class ProjectHandler {
 			projects.add(proj); // add our new project to projects list
 			Main.logger.info("Created child " + proj.getID() + " of " + temp.getID());
 		}
-		
-		String setFile = (dir.indexOf("Dropbox") == -1) ?
-				"/home/jamie/dsyncfs/settings.dss" : "/home/jamie/Dropbox/dsync/settings.dss";
-
-		File settings = new File(setFile);
-		FileWriter fw = null;
-		PrintWriter pw = null;
-		try {
-			fw = new FileWriter(settings, true);
-			pw = new PrintWriter(fw);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		pw.append("#l:" + proj.getDirectory() + "\n");
-		pw.close();
+		sw.createSettingsFile(proj);
+		sw.updateGlobalSettings(proj);
 	}
 	
 	/**
@@ -114,21 +101,8 @@ public class ProjectHandler {
 			Main.logger.info("Created new project" + proj.getID());
 		}
 		addDirectoryToProject(proj.ID, dir);
-		updateSettingsFile(proj.ID);
-		String setFile = (dir.indexOf("Dropbox") == -1) ?
-				"/home/jamie/dsyncfs/settings.dss" : "/home/jamie/Dropbox/dsync/settings.dss";
-
-		File settings = new File(setFile);
-		FileWriter fw = null;
-		PrintWriter pw = null;
-		try {
-			fw = new FileWriter(settings, true);
-			pw = new PrintWriter(fw);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		pw.append("#l:" + proj.getDirectory() + "\n");
-		pw.close();
+		sw.updateProjectSettings(proj);
+		sw.updateGlobalSettings(proj);
 	}
 	
 	/**
@@ -183,27 +157,5 @@ public class ProjectHandler {
 		projects.add(tempProject);
 	}
 	
-	private void updateSettingsFile(int ID) {
-		for (int i = 0; i < projects.size(); i++) {
-			if (projects.get(i).getID() == ID) {
-				String setFile = projects.get(i).getDirectory() + "/dss/projset.dss";
-				ArrayList<DSFile> files = projects.get(i).getFiles();
-				File settings = new File(setFile);
-				FileWriter fw = null;
-				PrintWriter pw = null;
-				try {
-					fw = new FileWriter(settings, true);
-					pw = new PrintWriter(fw);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				for (int j = 0; j < files.size(); j++) {
-					pw.append("#f:" + files.get(i).getName() + "\n");
-				}
-				pw.close();
-			}
-		}
-
-	}
 
 }
