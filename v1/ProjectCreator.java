@@ -64,13 +64,13 @@ public class ProjectCreator {
 		
 		File dir = new File(dirstr);
 		if (dir.exists() && dir.isDirectory()) {
-			Main.logger.warning("Directory exists!");
+			GUI.logger.warning("Directory exists!");
 			dir = new File(dirstr + "/dss");
 			dir.mkdirs();
 			return false;
 		}
 		else if (dir.exists() && dir.isFile()) {
-			Main.logger.warning("That's a file!");
+			GUI.logger.warning("That's a file!");
 			return false;
 		}
 		else {
@@ -112,7 +112,7 @@ public class ProjectCreator {
 				}
 			}
 			else {
-				Main.logger.warning("File already exists");
+				GUI.logger.warning("File already exists");
 			}
 		}
 

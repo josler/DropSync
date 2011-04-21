@@ -70,11 +70,11 @@ public class ProjectHandler {
 			}
 		}
 		if (proj == null) {
-			Main.logger.warning("Failed to copy correctly");
+			GUI.logger.warning("Failed to copy correctly");
 		}
 		else {
 			projects.add(proj); // add our new project to projects list
-			Main.logger.info("Created child " + proj.getID() + " of " + temp.getID());
+			GUI.logger.info("Created child " + proj.getID() + " of " + temp.getID());
 		}
 		sw.createSettingsFile(proj);
 		sw.updateGlobalSettings(proj);
@@ -92,11 +92,11 @@ public class ProjectHandler {
 			e.printStackTrace();
 		}
 		if (proj == null) {
-			Main.logger.warning("Failed to create correctly");
+			GUI.logger.warning("Failed to create correctly");
 		}
 		else {
 			projects.add(proj); // add our new project to projects list
-			Main.logger.info("Created new project" + proj.getID());
+			GUI.logger.info("Created new project" + proj.getID());
 		}
 		addDirectoryToProject(proj.ID, dir);
 		sw.updateProjectSettings(proj);

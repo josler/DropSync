@@ -11,6 +11,12 @@
 
 package v1;
 
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import javax.swing.tree.*;
+
 /**
  *
  * @author jamie
@@ -31,9 +37,6 @@ public class GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        leftPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
         rightPanel = new javax.swing.JPanel();
         NewButton = new javax.swing.JButton();
         CloneButton = new javax.swing.JButton();
@@ -41,24 +44,18 @@ public class GUI extends javax.swing.JFrame {
         MergeDownButton = new javax.swing.JButton();
         DeleteButton = new javax.swing.JButton();
         bottomPanel = new javax.swing.JPanel();
+        leftPanel = new javax.swing.JScrollPane();
+        Tree = new javax.swing.JTree();
         statusLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jScrollPane1.setViewportView(jTree1);
-
-        javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
-        leftPanel.setLayout(leftPanelLayout);
-        leftPanelLayout.setHorizontalGroup(
-            leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
-        );
-        leftPanelLayout.setVerticalGroup(
-            leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-        );
-
         NewButton.setText("New");
+        NewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NewButtonActionPerformed(evt);
+            }
+        });
 
         CloneButton.setText("Clone");
 
@@ -102,59 +99,134 @@ public class GUI extends javax.swing.JFrame {
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
-        statusLabel.setFont(new java.awt.Font("DejaVu Sans", 2, 12)); // NOI18N
-        statusLabel.setText("Status");
-
         javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
         bottomPanel.setLayout(bottomPanelLayout);
         bottomPanelLayout.setHorizontalGroup(
             bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bottomPanelLayout.createSequentialGroup()
-                .addContainerGap(361, Short.MAX_VALUE)
-                .addComponent(statusLabel)
-                .addContainerGap())
+            .addGap(0, 144, Short.MAX_VALUE)
         );
         bottomPanelLayout.setVerticalGroup(
             bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bottomPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(statusLabel)
-                .addContainerGap())
+            .addGap(0, 39, Short.MAX_VALUE)
         );
+
+        Tree.setModel(model);
+        leftPanel.setViewportView(Tree);
+
+        statusLabel.setFont(new java.awt.Font("DejaVu Sans", 2, 12)); // NOI18N
+        statusLabel.setText("Status");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(114, 114, 114))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(statusLabel)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(leftPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
+                    .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(statusLabel)
+                        .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void NewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewButtonActionPerformed
+        addNode("moo");
+    }//GEN-LAST:event_NewButtonActionPerformed
+
+    public static DefaultTreeModel model;
+    public static MutableTreeNode root;
+    public static Logger logger;
+    public static TreePath tp;
+
+    static { // logging bits
+        try {
+          int limit = 1000000; // how big our log file will be
+          FileHandler fh = new FileHandler("DSLog.log", limit, 1, true);
+          fh.setFormatter(new SimpleFormatter());
+          logger = Logger.getLogger("DSLog");
+          logger.addHandler(fh);
+        }
+        catch (IOException e) {
+          e.printStackTrace();
+        }
+    }
+
+    public static ProjectHandler ph;
     /**
     * @param args the command line arguments
     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+        public void run() {
+                GUI.logger.info("Starting program");
+                ph = new ProjectHandler();
+		//ph.createNewProject("/home/jamie/Code/Perl");
+		//ph.createNewChild(203,"/home/jamie/testing2");
+                ph.showProjects();
+                setupTree();
+                //addNode("moo");
                 new GUI().setVisible(true);
             }
         });
     }
+
+    public static void setupTree() {
+        root = new DefaultMutableTreeNode("Projects");
+        MutableTreeNode dropbox = new DefaultMutableTreeNode("Dropbox");
+        MutableTreeNode harddrive = new DefaultMutableTreeNode("Hard-drive");
+        root.insert(dropbox, 0);
+        root.insert(harddrive, 1);
+        model = new DefaultTreeModel(root);
+        //Tree.setEditable(true);
+    }
+
+    public static void addNode(String p, String loc) {
+        tp = Tree.getSelectionPath();
+        MutableTreeNode insertNode = null;
+        insertNode = (MutableTreeNode)tp.getLastPathComponent();
+        int insertIndex = 0;
+        MutableTreeNode parent = null;
+        if(tp == null) {
+            GUI.logger.warning("No node selected");
+
+        }
+        else {
+            parent = (MutableTreeNode)insertNode.getParent();
+            insertIndex = parent.getIndex(insertNode) + 1;
+            insertNode = parent;
+            MutableTreeNode node = new DefaultMutableTreeNode(p);
+            model.insertNodeInto(node, insertNode, insertIndex);
+        }
+        model.getIndexOfChild("dropbox", loc);
+        
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CloneButton;
@@ -162,10 +234,9 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton MergeDownButton;
     private javax.swing.JButton MergeUpButton;
     private javax.swing.JButton NewButton;
+    private static javax.swing.JTree Tree;
     private javax.swing.JPanel bottomPanel;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTree jTree1;
-    private javax.swing.JPanel leftPanel;
+    private javax.swing.JScrollPane leftPanel;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables

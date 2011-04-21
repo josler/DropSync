@@ -62,7 +62,7 @@ public class SettingsReader {
 		try {
 			scanner = new Scanner(new FileInputStream(f));
 		} catch (FileNotFoundException e) {
-			Main.logger.warning("Error opening file...");
+			GUI.logger.warning("Error opening file...");
 		}
 		try {
 			while (scanner.hasNextLine()) {
@@ -125,14 +125,14 @@ public class SettingsReader {
 		if (tempProject.getMasterID() != 0) {
 			for (int i = 0; i < projects.size(); i++) {
 				if (tempProject.getMasterID() == projects.get(i).getID()) {
-					Main.logger.info("Generated child " + tempProject.getID() +" of " + projects.get(i).getID() + " from disk");
+					GUI.logger.info("Generated child " + tempProject.getID() +" of " + projects.get(i).getID() + " from disk");
 					projects.get(i).addChild(tempProject);
 					break;
 				}
 			}
 		}
 		else
-			Main.logger.info("Generated new project from disk: " + tempProject.getID());
+			GUI.logger.info("Generated new project from disk: " + tempProject.getID());
 		
 		projects.add(tempProject);
 	}
