@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
  * GUI.java
  *
  * Created on 19-Apr-2011, 18:01:35
@@ -12,9 +7,12 @@
 package v1;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import javax.swing.JFileChooser;
+import javax.swing.text.Position.Bias;
 import javax.swing.tree.*;
 
 /**
@@ -44,9 +42,10 @@ public class GUI extends javax.swing.JFrame {
         MergeDownButton = new javax.swing.JButton();
         DeleteButton = new javax.swing.JButton();
         bottomPanel = new javax.swing.JPanel();
+        statusLabel = new javax.swing.JLabel();
+        inputText = new javax.swing.JTextField();
         leftPanel = new javax.swing.JScrollPane();
         Tree = new javax.swing.JTree();
-        statusLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,12 +57,27 @@ public class GUI extends javax.swing.JFrame {
         });
 
         CloneButton.setText("Clone");
+        CloneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CloneButtonActionPerformed(evt);
+            }
+        });
 
         MergeUpButton.setText("MergeUp");
+        MergeUpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MergeUpButtonActionPerformed(evt);
+            }
+        });
 
         MergeDownButton.setText("MergeDown");
 
         DeleteButton.setText("Delete");
+        DeleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
@@ -96,73 +110,124 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(MergeDownButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(DeleteButton)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        statusLabel.setFont(new java.awt.Font("DejaVu Sans", 2, 12));
+        statusLabel.setText("Status");
 
         javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
         bottomPanel.setLayout(bottomPanelLayout);
         bottomPanelLayout.setHorizontalGroup(
             bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 144, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bottomPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(inputText, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
+                .addComponent(statusLabel)
+                .addContainerGap())
         );
         bottomPanelLayout.setVerticalGroup(
             bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 39, Short.MAX_VALUE)
+            .addGroup(bottomPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(statusLabel)
+                    .addComponent(inputText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         Tree.setModel(model);
         leftPanel.setViewportView(Tree);
-
-        statusLabel.setFont(new java.awt.Font("DejaVu Sans", 2, 12)); // NOI18N
-        statusLabel.setText("Status");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(114, 114, 114))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(statusLabel)
-                        .addContainerGap())))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
-                    .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
+                    .addComponent(rightPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(statusLabel)
-                        .addContainerGap())))
+                .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void NewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewButtonActionPerformed
-        addNode("moo");
+        int returnVal = fc.showSaveDialog(this);// showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            
+        }
+        
+        if ("".equals(inputText.getText())) {
+            statusLabel.setText("No name entered!");
+        }
+        else if (false) {
+            // check that it doesn't already exist.
+        }
+        else {
+            if (ph.createNewProject(Environment.DROPBOX_PATH,inputText.getText())) {
+                addNode("Dropbox",ph.lastProject);
+                statusLabel.setText(inputText.getText() + "created.");
+            }
+        }
+        
     }//GEN-LAST:event_NewButtonActionPerformed
+
+    private void MergeUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MergeUpButtonActionPerformed
+        ph.showProjects();
+    }//GEN-LAST:event_MergeUpButtonActionPerformed
+
+    private void CloneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloneButtonActionPerformed
+        /*if ("".equals(inputText.getText())) {
+            statusLabel.setText("No name entered!");
+        }
+        else if (false) {
+            // check that it doesn't already exist.
+        }
+        else {*/
+        int returnVal = fc.showSaveDialog(this);// showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            Project temp = ph.lookupProject(getSelected());
+            if (temp != null) {
+                if (ph.createNewChild(temp.getID(),fc.getSelectedFile().getPath(),fc.getSelectedFile().getName()+":c")) {
+                    addNode("FileSystem",ph.lastProject);
+                    statusLabel.setText(getSelected() + "cloned.");
+                }
+            }
+        }
+
+        //}
+        
+        
+    }//GEN-LAST:event_CloneButtonActionPerformed
+
+    private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
+        Project temp = ph.lookupProject(getSelected());
+        ph.deleteProject(temp.getID());
+        model.removeNodeFromParent((MutableTreeNode)Tree.getSelectionPath().getLastPathComponent());
+    }//GEN-LAST:event_DeleteButtonActionPerformed
 
     public static DefaultTreeModel model;
     public static MutableTreeNode root;
     public static Logger logger;
     public static TreePath tp;
+    public static final JFileChooser fc = new JFileChooser();;
 
     static { // logging bits
         try {
@@ -178,7 +243,7 @@ public class GUI extends javax.swing.JFrame {
     }
 
     public static ProjectHandler ph;
-    /**
+    /**GUIGUI
     * @param args the command line arguments
     */
     public static void main(String args[]) {
@@ -186,12 +251,13 @@ public class GUI extends javax.swing.JFrame {
         public void run() {
                 GUI.logger.info("Starting program");
                 ph = new ProjectHandler();
+                
 		//ph.createNewProject("/home/jamie/Code/Perl");
 		//ph.createNewChild(203,"/home/jamie/testing2");
-                ph.showProjects();
+                //ph.showProjects();
                 setupTree();
-                //addNode("moo");
                 new GUI().setVisible(true);
+                expandTree();
             }
         });
     }
@@ -199,32 +265,47 @@ public class GUI extends javax.swing.JFrame {
     public static void setupTree() {
         root = new DefaultMutableTreeNode("Projects");
         MutableTreeNode dropbox = new DefaultMutableTreeNode("Dropbox");
-        MutableTreeNode harddrive = new DefaultMutableTreeNode("Hard-drive");
+        MutableTreeNode harddrive = new DefaultMutableTreeNode("FileSystem");
         root.insert(dropbox, 0);
         root.insert(harddrive, 1);
+
+        
+        int i = 0,j = 0;
+        ArrayList<Project> curr_projects = ph.getProjects();
+        while(i+j < curr_projects.size()) {
+            if (curr_projects.get(i).getMasterID() == 0) {
+                MutableTreeNode temp = new DefaultMutableTreeNode(curr_projects.get(i+j));
+                dropbox.insert(temp, i);
+                i++;
+            }
+            else {
+                MutableTreeNode temp = new DefaultMutableTreeNode(curr_projects.get(i+j));
+                harddrive.insert(temp, j);
+                j++;
+            }
+        }
+        
+        
         model = new DefaultTreeModel(root);
-        //Tree.setEditable(true);
+    }
+    
+    public static void expandTree() {
+        Tree.expandPath(Tree.getNextMatch("Dropbox",0,Bias.Forward));
+        Tree.expandPath(Tree.getNextMatch("FileSystem",0,Bias.Forward));
     }
 
-    public static void addNode(String p, String loc) {
+    public static void addNode(String loc, Project p) {
+        TreePath tt = Tree.getNextMatch(loc, 0, Bias.Forward);
+        MutableTreeNode node = new DefaultMutableTreeNode(p);
+        MutableTreeNode nin = (MutableTreeNode)tt.getLastPathComponent();
+        model.insertNodeInto(node, nin, nin.getChildCount());
+    }
+    
+    public static String getSelected() {
         tp = Tree.getSelectionPath();
-        MutableTreeNode insertNode = null;
-        insertNode = (MutableTreeNode)tp.getLastPathComponent();
-        int insertIndex = 0;
-        MutableTreeNode parent = null;
-        if(tp == null) {
-            GUI.logger.warning("No node selected");
-
-        }
-        else {
-            parent = (MutableTreeNode)insertNode.getParent();
-            insertIndex = parent.getIndex(insertNode) + 1;
-            insertNode = parent;
-            MutableTreeNode node = new DefaultMutableTreeNode(p);
-            model.insertNodeInto(node, insertNode, insertIndex);
-        }
-        model.getIndexOfChild("dropbox", loc);
-        
+        System.out.println(tp.getLastPathComponent());
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)tp.getLastPathComponent();
+        return node.toString();
     }
 
 
@@ -236,6 +317,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton NewButton;
     private static javax.swing.JTree Tree;
     private javax.swing.JPanel bottomPanel;
+    private javax.swing.JTextField inputText;
     private javax.swing.JScrollPane leftPanel;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JLabel statusLabel;

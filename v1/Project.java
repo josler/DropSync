@@ -78,10 +78,16 @@ public class Project {
 			System.out.print(childProjects.get(f).getName() + "(" + childProjects.get(f).getID() + ")");
 		System.out.println("\n");
 	}
+        
 
 	public void setID(int iD) {
 		ID = iD;
 	}
+
+        @Override
+        public String toString() {
+            return getName();
+        }
 
 	public int getID() {
 		return ID;
@@ -98,13 +104,17 @@ public class Project {
 	void addChild(Project p) {
 		childProjects.add(p);
 	}
+        
+        void deleteChild(Project p) {
+                childProjects.remove(p);
+        }
 	
-	void makeChild() {
+	/*void makeChild() {
 		Project p = new Project();
 		p.setName(this.name);
 		p.setDirectory(this.directory);
 		p.setMasterID(this.ID);
 		childProjects.add(p);
-	}
+	}*/
 	
 }

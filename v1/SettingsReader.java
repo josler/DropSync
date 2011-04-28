@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 public class SettingsReader {
 	
-	private String dbSettingsFile = "/home/jamie/Dropbox/dsync/settings.dss";
-	private String fsSettingsFile = "/home/jamie/dsyncfs/settings.dss";
+	private String dbSettingsFile = Environment.DSDP_SETTINGS_PATH;
+	private String fsSettingsFile = Environment.DSFS_SETTINGS_PATH;
 	private String projectName;
 	private String projectDirectory;
 	private Project tempProject = null;

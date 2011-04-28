@@ -40,17 +40,20 @@ public class ProjectCreator {
 		}
 		else {
 			p = new Project();
-			p.setName("moo"); // change this
 		}
 		p.setID(ProjectHandler.getNextID());
 		p.setDirectory(dir);
 		p.updateFiles(); // necessary to change files to point to new directory
-		if (createProjectDirectories(p)) {
+                int copyStatus = (parent == null) ? 1 : 0; // if making a new one, ignore existing dir and use it. 
+		if (createProjectDirectories(p,copyStatus)) {
 			if (parent != null)
 				createProjectFiles(parent.getDirectory(), p); // if we're making a child
 			else
 				createProjectFiles(p.getDirectory(), p); // otherwise
 		}
+                else {
+                    p = null;
+                }
 		return p;
 	}
 	
@@ -59,14 +62,12 @@ public class ProjectCreator {
 	 * @param p
 	 * @return
 	 */
-	private boolean createProjectDirectories(Project p) {
+	private boolean createProjectDirectories(Project p, int copyStatus) {
 		String dirstr = p.getDirectory();
 		
 		File dir = new File(dirstr);
-		if (dir.exists() && dir.isDirectory()) {
+		if (dir.exists() && dir.isDirectory() && copyStatus == 0) {
 			GUI.logger.warning("Directory exists!");
-			dir = new File(dirstr + "/dss");
-			dir.mkdirs();
 			return false;
 		}
 		else if (dir.exists() && dir.isFile()) {
