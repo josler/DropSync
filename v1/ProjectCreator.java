@@ -44,7 +44,7 @@ public class ProjectCreator {
 		p.setID(ProjectHandler.getNextID());
 		p.setDirectory(dir);
 		p.updateFiles(); // necessary to change files to point to new directory
-                int copyStatus = (parent == null) ? 1 : 0; // if making a new one, ignore existing dir and use it. 
+        int copyStatus = (parent == null) ? 1 : 0; // if making a new one, ignore existing dir and use it. 
 		if (createProjectDirectories(p,copyStatus)) {
 			if (parent != null)
 				createProjectFiles(parent.getDirectory(), p); // if we're making a child
@@ -92,7 +92,7 @@ public class ProjectCreator {
 		ArrayList<DSFile> files;
 		files =  p.getFiles();
 		for (int i = 0; i < files.size(); i++) { // files in project
-			File s = new File(parent_dir + "/" + p.getFiles().get(i).getFileString());
+			File s = new File(parent_dir + "/" + files.get(i).getFileString());
 			File f = new File(p.getDirectory() + "/" + files.get(i).getFileString());
 			if (!f.exists()) {
 				f.createNewFile();

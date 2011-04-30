@@ -87,6 +87,7 @@ public class ProjectHandler {
             projects.add(proj); // add our new project to projects list
             GUI.logger.info("Created child " + proj.getID() + " of " + temp.getID());
             sw.createSettingsFile(proj);
+            
             sw.updateGlobalSettings(proj);
             lastProject = proj;
             return true;
@@ -102,7 +103,7 @@ public class ProjectHandler {
     public boolean createNewProject(String dir, String name) {
         Project proj = new Project();
         try {
-            proj = pc.createProject(dir + name);
+            proj = pc.createProject(dir);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -114,7 +115,7 @@ public class ProjectHandler {
             proj.name = name;
             projects.add(proj); // add our new project to projects list
             GUI.logger.info("Created new project" + proj.getID());
-            addDirectoryToProject(proj.ID, dir + name);
+            addDirectoryToProject(proj.ID, dir);
             sw.updateProjectSettings(proj);
             sw.updateGlobalSettings(proj);
             lastProject = proj;
@@ -183,7 +184,7 @@ public class ProjectHandler {
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).getID() == ID) {
                 for (int j = 0; j < files.size(); j++) {
-                    projects.get(i).addFile(files.get(j));
+                    projects.get(i).addFile(files.get(j),1);
                 }
                 break;
             }
@@ -222,6 +223,11 @@ public class ProjectHandler {
 
     public void addProject(Project tempProject) {
         projects.add(tempProject);
+    }
+    
+    public Project getParent(String name) {
+        Project child = lookupProject(name);
+        return(lookupProject(child.getMasterID()));
     }
 
     public Project lookupProject(int ID) {

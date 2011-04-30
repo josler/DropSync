@@ -22,15 +22,15 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="leftPanel" pref="314" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Component id="bottomPanel" alignment="1" max="32767" attributes="1"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="leftPanel" min="-2" pref="319" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="rightPanel" min="-2" max="-2" attributes="1"/>
                   </Group>
-                  <Component id="bottomPanel" alignment="1" max="32767" attributes="1"/>
               </Group>
           </Group>
       </Group>
@@ -38,12 +38,12 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="12" pref="12" max="12" attributes="0"/>
-                      <Component id="leftPanel" pref="171" max="32767" attributes="0"/>
+                      <Component id="leftPanel" pref="250" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="rightPanel" alignment="1" max="32767" attributes="1"/>
+                  <Component id="rightPanel" max="32767" attributes="1"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="bottomPanel" min="-2" max="-2" attributes="0"/>
@@ -58,22 +58,16 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Group type="102" alignment="0" attributes="1">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="DeleteButton" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="NewButton" alignment="1" pref="90" max="32767" attributes="1"/>
-                              <Component id="CloneButton" alignment="1" pref="90" max="32767" attributes="1"/>
-                              <Component id="MergeUpButton" alignment="0" max="32767" attributes="1"/>
-                              <Component id="MergeDownButton" alignment="0" max="32767" attributes="1"/>
-                          </Group>
-                      </Group>
-                  </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="MergeDownButton" alignment="1" pref="90" max="32767" attributes="1"/>
+                      <Component id="MergeUpButton" alignment="1" pref="90" max="32767" attributes="1"/>
+                      <Component id="DeleteButton" alignment="1" pref="90" max="32767" attributes="1"/>
+                      <Component id="CloneButton" alignment="1" pref="90" max="32767" attributes="1"/>
+                      <Component id="AddButton" alignment="1" pref="90" max="32767" attributes="1"/>
+                      <Component id="NewButton" alignment="0" pref="90" max="32767" attributes="1"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -83,14 +77,16 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="NewButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="AddButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="CloneButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="DeleteButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="MergeUpButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="MergeDownButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="DeleteButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="46" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -124,6 +120,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="MergeDown"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MergeDownButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="DeleteButton">
           <Properties>
@@ -133,6 +132,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DeleteButtonActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="AddButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Add"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddButtonActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="bottomPanel">
@@ -140,12 +147,11 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="inputText" min="-2" pref="166" max="-2" attributes="0"/>
-                  <EmptySpace pref="204" max="32767" attributes="0"/>
-                  <Component id="statusLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="inputText" min="-2" pref="184" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="statusLabel" min="-2" pref="213" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -168,6 +174,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="12" style="2"/>
             </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Status"/>
           </Properties>
         </Component>

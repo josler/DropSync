@@ -9,6 +9,7 @@ package v1;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.swing.JFileChooser;
@@ -41,6 +42,7 @@ public class GUI extends javax.swing.JFrame {
         MergeUpButton = new javax.swing.JButton();
         MergeDownButton = new javax.swing.JButton();
         DeleteButton = new javax.swing.JButton();
+        AddButton = new javax.swing.JButton();
         bottomPanel = new javax.swing.JPanel();
         statusLabel = new javax.swing.JLabel();
         inputText = new javax.swing.JTextField();
@@ -71,6 +73,11 @@ public class GUI extends javax.swing.JFrame {
         });
 
         MergeDownButton.setText("MergeDown");
+        MergeDownButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MergeDownButtonActionPerformed(evt);
+            }
+        });
 
         DeleteButton.setText("Delete");
         DeleteButton.addActionListener(new java.awt.event.ActionListener() {
@@ -79,22 +86,26 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
+        AddButton.setText("Add");
+        AddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
         rightPanelLayout.setHorizontalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rightPanelLayout.createSequentialGroup()
-                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, rightPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(DeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, rightPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(NewButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                            .addComponent(CloneButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                            .addComponent(MergeUpButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(MergeDownButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap()
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(MergeDownButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                    .addComponent(MergeUpButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                    .addComponent(DeleteButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                    .addComponent(CloneButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                    .addComponent(AddButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                    .addComponent(NewButton, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
                 .addContainerGap())
         );
         rightPanelLayout.setVerticalGroup(
@@ -103,29 +114,31 @@ public class GUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(NewButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(AddButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CloneButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(DeleteButton)
+                .addGap(18, 18, 18)
                 .addComponent(MergeUpButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MergeDownButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(DeleteButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         statusLabel.setFont(new java.awt.Font("DejaVu Sans", 2, 12));
+        statusLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         statusLabel.setText("Status");
 
         javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
         bottomPanel.setLayout(bottomPanelLayout);
         bottomPanelLayout.setHorizontalGroup(
             bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bottomPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(inputText, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
-                .addComponent(statusLabel)
-                .addContainerGap())
+            .addGroup(bottomPanelLayout.createSequentialGroup()
+                .addComponent(inputText, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
         );
         bottomPanelLayout.setVerticalGroup(
             bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,20 +160,20 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(leftPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
-                    .addComponent(rightPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                    .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -169,11 +182,6 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void NewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewButtonActionPerformed
-        int returnVal = fc.showSaveDialog(this);// showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            
-        }
-        
         if ("".equals(inputText.getText())) {
             statusLabel.setText("No name entered!");
         }
@@ -181,40 +189,31 @@ public class GUI extends javax.swing.JFrame {
             // check that it doesn't already exist.
         }
         else {
-            if (ph.createNewProject(Environment.DROPBOX_PATH,inputText.getText())) {
+            if (ph.createNewProject(Environment.DROPBOX_PATH + inputText.getText(),inputText.getText())) {
                 addNode("Dropbox",ph.lastProject);
-                statusLabel.setText(inputText.getText() + "created.");
+                statusLabel.setText(inputText.getText() + " created.");
             }
         }
         
     }//GEN-LAST:event_NewButtonActionPerformed
 
     private void MergeUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MergeUpButtonActionPerformed
-        ph.showProjects();
+        merger.run(ph.lookupProject(getSelected()), ph.getParent(getSelected()));
+
     }//GEN-LAST:event_MergeUpButtonActionPerformed
 
     private void CloneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloneButtonActionPerformed
-        /*if ("".equals(inputText.getText())) {
-            statusLabel.setText("No name entered!");
-        }
-        else if (false) {
-            // check that it doesn't already exist.
-        }
-        else {*/
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int returnVal = fc.showSaveDialog(this);// showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             Project temp = ph.lookupProject(getSelected());
             if (temp != null) {
                 if (ph.createNewChild(temp.getID(),fc.getSelectedFile().getPath(),fc.getSelectedFile().getName()+":c")) {
                     addNode("FileSystem",ph.lastProject);
-                    statusLabel.setText(getSelected() + "cloned.");
+                    statusLabel.setText(getSelected() + " cloned.");
                 }
             }
         }
-
-        //}
-        
-        
     }//GEN-LAST:event_CloneButtonActionPerformed
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
@@ -223,11 +222,28 @@ public class GUI extends javax.swing.JFrame {
         model.removeNodeFromParent((MutableTreeNode)Tree.getSelectionPath().getLastPathComponent());
     }//GEN-LAST:event_DeleteButtonActionPerformed
 
+    private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            if (ph.createNewProject(fc.getSelectedFile().getPath(),fc.getSelectedFile().getName())) {
+                addNode("Dropbox",ph.lastProject);
+                statusLabel.setText(fc.getSelectedFile() + " created.");
+            }
+        }
+    }//GEN-LAST:event_AddButtonActionPerformed
+
+    private void MergeDownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MergeDownButtonActionPerformed
+         ph.showProjects();
+    }//GEN-LAST:event_MergeDownButtonActionPerformed
+
     public static DefaultTreeModel model;
     public static MutableTreeNode root;
     public static Logger logger;
     public static TreePath tp;
-    public static final JFileChooser fc = new JFileChooser();;
+    public static final JFileChooser fc = new JFileChooser();
+    public static ProjectHandler ph;
+    public static Merger merger;
 
     static { // logging bits
         try {
@@ -242,7 +258,6 @@ public class GUI extends javax.swing.JFrame {
         }
     }
 
-    public static ProjectHandler ph;
     /**GUIGUI
     * @param args the command line arguments
     */
@@ -251,10 +266,7 @@ public class GUI extends javax.swing.JFrame {
         public void run() {
                 GUI.logger.info("Starting program");
                 ph = new ProjectHandler();
-                
-		//ph.createNewProject("/home/jamie/Code/Perl");
-		//ph.createNewChild(203,"/home/jamie/testing2");
-                //ph.showProjects();
+                merger = new Merger();
                 setupTree();
                 new GUI().setVisible(true);
                 expandTree();
@@ -303,13 +315,13 @@ public class GUI extends javax.swing.JFrame {
     
     public static String getSelected() {
         tp = Tree.getSelectionPath();
-        System.out.println(tp.getLastPathComponent());
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)tp.getLastPathComponent();
         return node.toString();
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AddButton;
     private javax.swing.JButton CloneButton;
     private javax.swing.JButton DeleteButton;
     private javax.swing.JButton MergeDownButton;

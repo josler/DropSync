@@ -56,6 +56,7 @@ public class SettingsWriter {
 		pw.println("#d:" + p.getDirectory());
 		for (int i = 0; i < p.files.size(); i++) {
 			pw.println("#f:" + p.files.get(i).getFileString());
+			pw.println("#v:" + p.files.get(i).getVersion());
 		}
 		pw.close();
 		

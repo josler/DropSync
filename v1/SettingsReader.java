@@ -15,6 +15,7 @@ public class SettingsReader {
 	private Project tempProject = null;
 	private ArrayList<Project> projects;
 	private ArrayList<String> projectsToRead;
+	private Scanner scanner = null;
 	
 	public SettingsReader() {
 		projects = new ArrayList<Project>();
@@ -58,7 +59,7 @@ public class SettingsReader {
 	 */
 	private void readFile(String filename) {
 		File f = new File(filename);
-		Scanner scanner = null;
+		//Scanner scanner = null;
 		try {
 			scanner = new Scanner(new FileInputStream(f));
 		} catch (FileNotFoundException e) {
@@ -107,7 +108,9 @@ public class SettingsReader {
 					tempProject.setMasterID(Integer.parseInt(s1));
 					break;
 				case 'f':
-					tempProject.addFile(str.substring(3).trim());
+					String vers_line = scanner.nextLine();
+					int version = Integer.parseInt(vers_line.substring(3).trim());
+					tempProject.addFile(str.substring(3).trim(), version);
 					break;
 				default:
 					break;

@@ -51,8 +51,9 @@ public class Project {
 		return directory;
 	}
 
-	public void addFile(String file) {
+	public void addFile(String file, int Version) {
 		DSFile t = new DSFile(file,directory);
+        t.setVersion(Version);
 		files.add(t);
 	}
 	
@@ -105,9 +106,9 @@ public class Project {
 		childProjects.add(p);
 	}
         
-        void deleteChild(Project p) {
-                childProjects.remove(p);
-        }
+    void deleteChild(Project p) {
+            childProjects.remove(p);
+    }
 	
 	/*void makeChild() {
 		Project p = new Project();
