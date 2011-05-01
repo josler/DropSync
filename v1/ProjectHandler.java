@@ -68,12 +68,12 @@ public class ProjectHandler {
             temp = projects.get(p);
             if (temp.getID() == ID) { // finding parent to add child to
                 try {
-                    proj = pc.createProject(temp, dir);
+                    proj = pc.createProject(temp, dir);                    
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
   
-                if (proj != null) {
+                if (proj != null) {              
                     temp.addChild(proj);
                 }
                 break;

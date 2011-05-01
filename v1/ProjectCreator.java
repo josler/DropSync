@@ -116,6 +116,7 @@ public class ProjectCreator {
 				GUI.logger.warning("File already exists");
 			}
 		}
+        p.updateFiles();
 
 	}
 }

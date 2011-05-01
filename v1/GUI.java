@@ -6,6 +6,7 @@
 
 package v1;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
@@ -43,6 +44,8 @@ public class GUI extends javax.swing.JFrame {
         MergeDownButton = new javax.swing.JButton();
         DeleteButton = new javax.swing.JButton();
         AddButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        AddFileButton = new javax.swing.JButton();
         bottomPanel = new javax.swing.JPanel();
         statusLabel = new javax.swing.JLabel();
         inputText = new javax.swing.JTextField();
@@ -86,10 +89,19 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        AddButton.setText("Add");
+        AddButton.setText("Add Existing");
         AddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AddButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Project Options");
+
+        AddFileButton.setText("Add File(s)");
+        AddFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddFileButtonActionPerformed(evt);
             }
         });
 
@@ -100,30 +112,35 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(rightPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(MergeDownButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                    .addComponent(MergeUpButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                    .addComponent(DeleteButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                    .addComponent(CloneButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                    .addComponent(AddButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                    .addComponent(NewButton, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(NewButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                    .addComponent(AddButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                    .addComponent(MergeDownButton, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                    .addComponent(MergeUpButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                    .addComponent(DeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                    .addComponent(CloneButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                    .addComponent(AddFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
                 .addContainerGap())
         );
         rightPanelLayout.setVerticalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rightPanelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(NewButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(AddButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(AddFileButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CloneButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(DeleteButton)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MergeUpButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(MergeDownButton)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addComponent(MergeDownButton))
         );
 
         statusLabel.setFont(new java.awt.Font("DejaVu Sans", 2, 12));
@@ -138,7 +155,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(inputText, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addGap(31, 31, 31))
         );
         bottomPanelLayout.setVerticalGroup(
             bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,7 +177,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(leftPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -172,7 +189,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                        .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
                     .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -198,8 +215,8 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_NewButtonActionPerformed
 
     private void MergeUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MergeUpButtonActionPerformed
-        merger.run(ph.lookupProject(getSelected()), ph.getParent(getSelected()));
-
+        merger.run(ph.lookupProject(getSelected()), ph.getParent(getSelected()), "up");
+        statusLabel.setText(getSelected()+ " merged up to " + ph.getParent(getSelected()));
     }//GEN-LAST:event_MergeUpButtonActionPerformed
 
     private void CloneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloneButtonActionPerformed
@@ -220,6 +237,7 @@ public class GUI extends javax.swing.JFrame {
         Project temp = ph.lookupProject(getSelected());
         ph.deleteProject(temp.getID());
         model.removeNodeFromParent((MutableTreeNode)Tree.getSelectionPath().getLastPathComponent());
+        statusLabel.setText("Deleted " + temp.getName());
     }//GEN-LAST:event_DeleteButtonActionPerformed
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
@@ -234,8 +252,26 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_AddButtonActionPerformed
 
     private void MergeDownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MergeDownButtonActionPerformed
-         ph.showProjects();
+         merger.run(ph.getParent(getSelected()), ph.lookupProject(getSelected()), "down");
+         statusLabel.setText(ph.getParent(getSelected())+ " merged down to " + getSelected());
     }//GEN-LAST:event_MergeDownButtonActionPerformed
+
+    private void AddFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddFileButtonActionPerformed
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setMultiSelectionEnabled(true);
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+           Project proj = ph.lookupProject(getSelected());
+           File[] selected = fc.getSelectedFiles();
+           for(int i = 0; i < selected.length; i++) {
+               proj.addFile(selected[i].getName(),1);
+           }  
+           ph.sw.updateProjectSettings(proj);
+        }
+        
+        fc.setMultiSelectionEnabled(false);
+        statusLabel.setText("Added files to " + getSelected());
+    }//GEN-LAST:event_AddFileButtonActionPerformed
 
     public static DefaultTreeModel model;
     public static MutableTreeNode root;
@@ -322,6 +358,7 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddButton;
+    private javax.swing.JButton AddFileButton;
     private javax.swing.JButton CloneButton;
     private javax.swing.JButton DeleteButton;
     private javax.swing.JButton MergeDownButton;
@@ -330,6 +367,7 @@ public class GUI extends javax.swing.JFrame {
     private static javax.swing.JTree Tree;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JTextField inputText;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane leftPanel;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JLabel statusLabel;

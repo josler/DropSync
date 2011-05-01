@@ -21,21 +21,65 @@ public class Merger extends Thread {
     private Project child = null;
     
     
-    public boolean run(Project p1, Project p2) {
-    	child = (p1.getMasterID() == p2.getID()) ? p1 : p2;
-    	parent = (p1.getMasterID() == p2.getID()) ? p2 : p1;
+    public boolean run(Project child, Project parent, String mode) {
+    	this.child = child;
+    	this.parent = parent;
     	if (child == null) {
     		GUI.logger.info("Can't compare files");
     		return false;
     	}
-		mergeProjects();
+    	if (mode == "up") {
+    		mergeUpProjects();
+    	}
+    	else if (mode == "down") {
+    		mergeDownProjects();
+    	}
 		return true;
 		
     }
     
-    private void mergeProjects() {
-        
-        
+    
+    /*
+     * Merges files down (updating them).
+     * Uses the clone as 'parent file', and master as 'child'
+     */
+    private void mergeDownProjects() {
+    	ArrayList<DSFile> parent_files, child_files;
+    	parent_files = parent.getFiles();
+    	child_files = child.getFiles();
+    	
+    	for (int i = 0; i < parent_files.size(); i++) {
+    		for (int j = 0; j < child_files.size(); j++) {
+				DSFile parentFile = parent_files.get(i);
+    			DSFile childFile = child_files.get(j);
+    			
+    			if (parentFile.getFileString().equals(childFile.getFileString())) {
+               		String ffullnamep = parentFile.getDirectory() + "/" + parentFile.getFileString();
+                	String ffullnamec = childFile.getDirectory() + "/" + childFile.getFileString();
+					
+					if(compareFiles(ffullnamep, ffullnamec)) { // if both files the same, do nothing!
+                        GUI.logger.info("Trying merging " + ffullnamec + " into " + ffullnamep + ": No changes = pass");
+					}
+					else { // if not, copy file down.
+                        GUI.logger.info("Trying merging " + ffullnamec + " into " + ffullnamep + ": Changes made = copy");
+						copyFile(ffullnamep,ffullnamec);
+                        // updating version
+                        int version = childFile.getVersion();
+                        parentFile.setVersion(version);
+					}
+					
+
+                }
+    		}
+    	}
+    	GUI.ph.sw.updateProjectSettings(parent);
+    }
+    
+    
+    /*
+     * Merges up project, copying files as need and merging with diff.
+     */
+    private void mergeUpProjects() {       
     	ArrayList<DSFile> parent_files, child_files;
     	parent_files = parent.getFiles();
     	child_files = child.getFiles();
@@ -47,33 +91,36 @@ public class Merger extends Thread {
     			if (parentFile.getFileString().equals(childFile.getFileString())) {
                     String ffullnamep = parentFile.getDirectory() + "/" + parentFile.getFileString();
                     String ffullnamec = childFile.getDirectory() + "/" + childFile.getFileString();
-                    //System.out.println(parentFile.getVersion() + " " + childFile.getVersion());
+
                     if (parentFile.getVersion() == childFile.getVersion()) {
                         if (compareFiles(ffullnamep, ffullnamec)) { // same
-                            System.out.println("same version, no change");
+                            GUI.logger.info("Trying merging " + ffullnamec + " into " + ffullnamep + ": Same version, no changes = pass");
                         }
                         else {
-                            System.out.println("same version, copying files");
-                            copyFile(ffullnamep, ffullnamec); // BUG! Can't copy blindly
+                            GUI.logger.info("Trying merging " + ffullnamec + " into " + ffullnamep + ": Same version, changes made = copy");
+                            copyFile(ffullnamep, ffullnamec);
+                            // update version
+                            int version = parentFile.getVersion();
+                            version++;
+                            parentFile.setVersion(version);
+                            childFile.setVersion(version);
                         }
                     }
                     else { // someone else merged, compare files
                         
                         if (compareFiles(ffullnamep, ffullnamec)) { // if same
-                            System.out.println("different version but no change");
-                            //copyFile(ffullnamep, ffullnamec);
+                            GUI.logger.info("Trying merging " + ffullnamec + " into " + ffullnamep + ": Different version, no changes = pass");
                         }
                         else {
-                            System.out.println("different version, merging files");
+                            GUI.logger.info("Trying merging " + ffullnamec + " into " + ffullnamep + ": Different version, no changes = merge");
                             mergeFiles(ffullnamep, ffullnamec);
+                            // update version
+                            int version = parentFile.getVersion();
+                            version++;
+                            parentFile.setVersion(version);
+                            childFile.setVersion(version);
                         }
                     }
-                    
-                    // update version
-                    int version = parentFile.getVersion();
-                    version++;
-                    parentFile.setVersion(version);
-                    childFile.setVersion(version);
     			}
     		}
     	}
