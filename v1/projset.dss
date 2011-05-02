@@ -4,5 +4,8 @@
 #m:0
 #d:/path/to/this/project/on/filesystem
 #f:t1.txt
+#v:65
 #f:t2.c
+#v:65
 #f:t3.c
+#v:65

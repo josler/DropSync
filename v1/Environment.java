@@ -15,6 +15,7 @@ public class Environment {
     static String FS_PATH = "/home/jamie/dsyncfs/";
     static String DSDP_SETTINGS_PATH = "/home/jamie/Dropbox/dsync/settings.dss";
     static String DSFS_SETTINGS_PATH = "/home/jamie/dsyncfs/settings.dss";
+    static boolean Warnings = true;
     
     public static void setupEnvironmentPath(String what, String path) {
         if (what.toLowerCase().equals("dropbox")) {
@@ -25,7 +26,15 @@ public class Environment {
             FS_PATH =  path;
             DSFS_SETTINGS_PATH = path + "/settings.dss";
         }
-        
+    }
+    
+    public static void setWarnings(int warning) {
+        if (warning == 0) {
+            Warnings = false;
+        }
+        else {
+            Warnings = true;
+        }
     }
     
 }

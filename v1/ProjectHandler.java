@@ -31,8 +31,8 @@ public class ProjectHandler {
     private void importProjects() {
         String dbloc = null;
         String fsloc = null;
-        String cwd = System.getProperty("user.dir");//new File(".").getAbsolutePath(); // where program running from
-        System.out.println(cwd);
+        String cwd = System.getProperty("user.dir"); // where program running from
+
         Scanner scanner = null;
         try {
             File envSetting = new File(cwd+"/globalset.dss");
@@ -50,6 +50,9 @@ public class ProjectHandler {
                             break;
                         case 'f':
                             fsloc = str.substring(3);
+                            break;
+                        case 'w':
+                            Environment.setWarnings(Integer.parseInt(str.substring(3)));
                             break;
                         default:
                             break;

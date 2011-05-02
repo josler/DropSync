@@ -10,10 +10,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.text.Position.Bias;
 import javax.swing.tree.*;
 
@@ -177,7 +177,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                    .addComponent(bottomPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(leftPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -216,8 +216,31 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_NewButtonActionPerformed
 
     private void MergeUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MergeUpButtonActionPerformed
-        merger.run(ph.lookupProject(getSelected()), ph.getParent(getSelected()), "up");
-        statusLabel.setText(getSelected()+ " merged up to " + ph.getParent(getSelected()));
+        if(Environment.Warnings) {
+            Object[] options = {"Yes", "No"};
+            int n = JOptionPane.showOptionDialog(this,
+                "This will attempt to merge your changes up to the master,\n if conflicts found "
+                + "diff files will be put in the folder. \nCheck for and edit these, renaming properly"
+                + "\nIs that ok?",
+                "Warning...",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]);
+            if (n == JOptionPane.YES_OPTION) {
+                merger.run(ph.lookupProject(getSelected()), ph.getParent(getSelected()), "up");
+                statusLabel.setText(getSelected()+ " merged up to " + ph.getParent(getSelected()));
+            }
+            else {
+                statusLabel.setText("Did not merge anything.");
+            }
+        }
+        else {
+            merger.run(ph.lookupProject(getSelected()), ph.getParent(getSelected()), "up");
+            statusLabel.setText(getSelected()+ " merged up to " + ph.getParent(getSelected()));
+        }
+        
     }//GEN-LAST:event_MergeUpButtonActionPerformed
 
     private void CloneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloneButtonActionPerformed
@@ -240,31 +263,108 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_CloneButtonActionPerformed
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
-        Project temp = ph.lookupProject(getSelected());
-        ph.deleteProject(temp.getID());
-        model.removeNodeFromParent((MutableTreeNode)Tree.getSelectionPath().getLastPathComponent());
-        statusLabel.setText("Deleted " + temp.getName());
+        if(Environment.Warnings) {
+            Object[] options = {"Yes", "No"};
+            int n = JOptionPane.showOptionDialog(this,
+                "This will permanantly delete this project on-disk. "
+                + "\nIs that ok?",
+                "Warning...",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]);
+            if (n == JOptionPane.YES_OPTION) {
+                Project temp = ph.lookupProject(getSelected());
+                ph.deleteProject(temp.getID());
+                model.removeNodeFromParent((MutableTreeNode)Tree.getSelectionPath().getLastPathComponent());
+                statusLabel.setText("Deleted " + temp.getName());
+            }
+            else {
+                statusLabel.setText("Did not delete anything.");
+            }
+        }
+        else {
+            Project temp = ph.lookupProject(getSelected());
+            ph.deleteProject(temp.getID());
+            model.removeNodeFromParent((MutableTreeNode)Tree.getSelectionPath().getLastPathComponent());
+            statusLabel.setText("Deleted " + temp.getName());
+        }
     }//GEN-LAST:event_DeleteButtonActionPerformed
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = fc.showOpenDialog(this);        
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            if (ph.lookupProject(fc.getSelectedFile().getName()) != null) {
-                GUI.logger.warning("File with same name exists!");
-                statusLabel.setText("File with that name exists, please rename.");
+         if(Environment.Warnings) {
+            Object[] options = {"Yes", "No"};
+            int n = JOptionPane.showOptionDialog(this,
+                "This will move the project to dropbox/dsync area,\n before "
+                + ", no copy will remain in previous location."
+                + "\nIs that ok?",
+                "Warning...",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]);
+            if (n == JOptionPane.YES_OPTION) {    
+                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int returnVal = fc.showOpenDialog(this);        
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    if (ph.lookupProject(fc.getSelectedFile().getName()) != null) {
+                        GUI.logger.warning("File with same name exists!");
+                        statusLabel.setText("File with that name exists, please rename.");
+                    }
+                    else if (ph.createNewProject(fc.getSelectedFile().getPath(),fc.getSelectedFile().getName())) { // make a new project
+                        ph.moveProject(ph.lookupProject(fc.getSelectedFile().getName()).getID()); // MOVE to dropbox, delete old files
+                        addNode("Dropbox",ph.lastProject);
+                        statusLabel.setText(fc.getSelectedFile() + " created.");
+                    }
+                }
             }
-            else if (ph.createNewProject(fc.getSelectedFile().getPath(),fc.getSelectedFile().getName())) { // make a new project
-                ph.moveProject(ph.lookupProject(fc.getSelectedFile().getName()).getID()); // MOVE to dropbox, delete old files
-                addNode("Dropbox",ph.lastProject);
-                statusLabel.setText(fc.getSelectedFile() + " created.");
+            else {
+                statusLabel.setText("Did not add anything.");
             }
-        }
+         }
+         else { // no warnings
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int returnVal = fc.showOpenDialog(this);        
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                if (ph.lookupProject(fc.getSelectedFile().getName()) != null) {
+                    GUI.logger.warning("File with same name exists!");
+                    statusLabel.setText("File with that name exists, please rename.");
+                }
+                else if (ph.createNewProject(fc.getSelectedFile().getPath(),fc.getSelectedFile().getName())) { // make a new project
+                    ph.moveProject(ph.lookupProject(fc.getSelectedFile().getName()).getID()); // MOVE to dropbox, delete old files
+                    addNode("Dropbox",ph.lastProject);
+                    statusLabel.setText(fc.getSelectedFile() + " created.");
+                }
+            }
+         }
     }//GEN-LAST:event_AddButtonActionPerformed
 
     private void MergeDownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MergeDownButtonActionPerformed
-         merger.run(ph.getParent(getSelected()), ph.lookupProject(getSelected()), "down");
-         statusLabel.setText(ph.getParent(getSelected())+ " merged down to " + getSelected());
+        if (Environment.Warnings) {        
+            Object[] options = {"Yes", "No"};
+            int n = JOptionPane.showOptionDialog(this,
+                "This will overwrite any changes you have made to the clone."
+                + "\nIs that ok?",
+                "Warning...",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]);
+            if (n == JOptionPane.YES_OPTION) {
+                merger.run(ph.getParent(getSelected()), ph.lookupProject(getSelected()), "down");
+                statusLabel.setText(ph.getParent(getSelected())+ " merged down to " + getSelected());
+            }
+            else {
+                statusLabel.setText("Did not merge anything.");
+            }
+        }
+        else {
+            merger.run(ph.getParent(getSelected()), ph.lookupProject(getSelected()), "down");
+            statusLabel.setText(ph.getParent(getSelected())+ " merged down to " + getSelected());
+        }
     }//GEN-LAST:event_MergeDownButtonActionPerformed
 
     private void AddFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddFileButtonActionPerformed
@@ -318,6 +418,7 @@ public class GUI extends javax.swing.JFrame {
                 setupTree();
                 new GUI().setVisible(true);
                 expandTree();
+                
             }
         });
     }
@@ -348,6 +449,7 @@ public class GUI extends javax.swing.JFrame {
         
         model = new DefaultTreeModel(root);
     }
+    
     
     public static void expandTree() {
         Tree.expandPath(Tree.getNextMatch("Dropbox",0,Bias.Forward));
@@ -382,7 +484,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane leftPanel;
     private javax.swing.JPanel rightPanel;
-    private javax.swing.JLabel statusLabel;
+    private static javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 
 }

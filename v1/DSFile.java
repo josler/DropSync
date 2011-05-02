@@ -19,7 +19,11 @@ public class DSFile {
 
 	public void setName(String name) {
 		String[] temp = name.split("\\.");
-		this.name = temp[0];
+        this.name = "";
+        for (int i = 0; i < temp.length-1; i++) {
+            this.name += ("." + temp[i]);
+        }
+        this.name = this.name.substring(1);
 		this.extension = temp[temp.length-1];
 	}
 

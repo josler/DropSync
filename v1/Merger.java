@@ -167,8 +167,8 @@ public class Merger extends Thread {
             
             
             try {
-                filea.delete();
-                temp.renameTo(filea);
+                //filea.delete();
+                temp.renameTo(new File(sfilea + ".diff"));
             }
             catch (Exception e) {
                 
