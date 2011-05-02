@@ -47,8 +47,9 @@ public class SettingsReader {
 		readFile(fsSettingsFile);
 		for (int d = 0; d < projectsToRead.size(); d++) {
 			tempProject = null;
-			readFile(projectsToRead.get(d) + "/dss/projset.dss");
-			genProject();
+            // if we can't open a particular project file, skip it!
+			if (readFile(projectsToRead.get(d) + "/dss/projset.dss")==0)
+                genProject();
 		}
 		return projects;
 	}
@@ -57,24 +58,31 @@ public class SettingsReader {
 	 * Reads a file and parses it properly.
 	 * @param filename the file to be read.
 	 */
-	private void readFile(String filename) {
-		File f = new File(filename);
+	private int readFile(String filename) {
+		
 		//Scanner scanner = null;
 		try {
+            File f = new File(filename);
 			scanner = new Scanner(new FileInputStream(f));
 		} catch (FileNotFoundException e) {
 			GUI.logger.warning("Error opening file...");
+            return 1;
 		}
-		try {
-			while (scanner.hasNextLine()) {
-				parseLine(scanner.nextLine());
-			}
-				
-		} finally {
-			scanner.close();
-		}
-	}
-	
+        try {
+            while (scanner.hasNextLine()) {
+                parseLine(scanner.nextLine());
+            }
+        }
+        catch(Exception e) {
+            return 1;
+        }
+
+        finally {
+            scanner.close();
+        }
+        return 0;
+    }
+
 	/**
 	 * Parse a line of the settings file.
 	 * @param str the line to be parsed.

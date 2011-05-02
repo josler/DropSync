@@ -4,8 +4,10 @@
 package v1;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +29,52 @@ public class ProjectHandler {
      * Imports projects from disk. Imports dropbox projects and ones elsewhere
      */
     private void importProjects() {
-        SettingsReader sr = new SettingsReader();
+        String dbloc = null;
+        String fsloc = null;
+        String cwd = System.getProperty("user.dir");//new File(".").getAbsolutePath(); // where program running from
+        System.out.println(cwd);
+        Scanner scanner = null;
+        try {
+            File envSetting = new File(cwd+"/globalset.dss");
+			scanner = new Scanner(new FileInputStream(envSetting));
+		} catch (Exception e) {
+			GUI.logger.warning("Error opening file...");
+		}
+        try {
+            while (scanner.hasNextLine()) {
+                String str = scanner.nextLine();
+                if(str.indexOf("#") == 0) {
+                    switch (str.charAt(1)) {
+                        case 'd':
+                            dbloc = str.substring(3);
+                            break;
+                        case 'f':
+                            fsloc = str.substring(3);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        catch(Exception e) {
+            
+        }
+
+        finally {
+            scanner.close();
+        }
+        System.out.println(dbloc + " / " + fsloc);
+        SettingsReader sr = null;
+        if (dbloc != null && fsloc != null) {      
+            Environment.setupEnvironmentPath("dropbox", dbloc);
+            Environment.setupEnvironmentPath("filesystem", fsloc);
+            sr = new SettingsReader();
+        } else {
+            return;
+        }
+        
+        
         projects = sr.getProjects();
     }
 
@@ -146,7 +193,7 @@ public class ProjectHandler {
                 }
                 
                 try {
-                    if (temp.getDirectory().indexOf("Dropbox") != -1) {
+                    if (temp.getDirectory().indexOf(Environment.DROPBOX_PATH) != -1) {
                         sw.editSettingsFile(Environment.DSDP_SETTINGS_PATH, "#l:" + temp.getDirectory());
                     }
                     else {
@@ -159,6 +206,14 @@ public class ProjectHandler {
                 break;
             }
         }
+    }
+    
+    public void moveProject(int ID) {
+        Project original = lookupProject(ID);
+        String name = original.getName();
+        createNewChild(ID, Environment.DROPBOX_PATH+name, name);
+        deleteProject(ID);
+        lookupProject(name).setMasterID(0);
     }
 
     public boolean deleteDirectory(File path) {

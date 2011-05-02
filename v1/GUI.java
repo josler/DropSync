@@ -202,9 +202,10 @@ public class GUI extends javax.swing.JFrame {
         if ("".equals(inputText.getText())) {
             statusLabel.setText("No name entered!");
         }
-        else if (false) {
-            // check that it doesn't already exist.
-        }
+        else if (ph.lookupProject(inputText.getText()) != null) {
+                GUI.logger.warning("File with same name exists!");
+                statusLabel.setText("File with that name exists, choose another.");
+            }
         else {
             if (ph.createNewProject(Environment.DROPBOX_PATH + inputText.getText(),inputText.getText())) {
                 addNode("Dropbox",ph.lastProject);
@@ -225,7 +226,12 @@ public class GUI extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             Project temp = ph.lookupProject(getSelected());
             if (temp != null) {
-                if (ph.createNewChild(temp.getID(),fc.getSelectedFile().getPath(),fc.getSelectedFile().getName()+":c")) {
+                System.out.println(ph.lookupProject(fc.getSelectedFile().getName()+":c"));
+                if (ph.lookupProject(fc.getSelectedFile().getName()+":c") != null) {
+                    GUI.logger.warning("File with same name exists!");
+                    statusLabel.setText("File with that name exists, please rename.");
+                }
+                else if (ph.createNewChild(temp.getID(),fc.getSelectedFile().getPath(),fc.getSelectedFile().getName()+":c")) {
                     addNode("FileSystem",ph.lastProject);
                     statusLabel.setText(getSelected() + " cloned.");
                 }
@@ -242,9 +248,14 @@ public class GUI extends javax.swing.JFrame {
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = fc.showOpenDialog(this);
+        int returnVal = fc.showOpenDialog(this);        
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            if (ph.createNewProject(fc.getSelectedFile().getPath(),fc.getSelectedFile().getName())) {
+            if (ph.lookupProject(fc.getSelectedFile().getName()) != null) {
+                GUI.logger.warning("File with same name exists!");
+                statusLabel.setText("File with that name exists, please rename.");
+            }
+            else if (ph.createNewProject(fc.getSelectedFile().getPath(),fc.getSelectedFile().getName())) { // make a new project
+                ph.moveProject(ph.lookupProject(fc.getSelectedFile().getName()).getID()); // MOVE to dropbox, delete old files
                 addNode("Dropbox",ph.lastProject);
                 statusLabel.setText(fc.getSelectedFile() + " created.");
             }
@@ -267,10 +278,11 @@ public class GUI extends javax.swing.JFrame {
                proj.addFile(selected[i].getName(),1);
            }  
            ph.sw.updateProjectSettings(proj);
+           statusLabel.setText("Added files to " + getSelected());
         }
         
         fc.setMultiSelectionEnabled(false);
-        statusLabel.setText("Added files to " + getSelected());
+        
     }//GEN-LAST:event_AddFileButtonActionPerformed
 
     public static DefaultTreeModel model;

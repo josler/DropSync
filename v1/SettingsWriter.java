@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class SettingsWriter {
-
+    
 	public void updateProjectSettings(Project p) {
 		createSettingsFile(p);
 	}
 	
 	public void updateGlobalSettings(Project p) {
-		String setFile = (p.getDirectory().indexOf("Dropbox") == -1) ? 
+		String setFile = (p.getDirectory().toLowerCase().indexOf("dropbox") == -1) ? 
                         Environment.DSFS_SETTINGS_PATH : Environment.DSDP_SETTINGS_PATH;
 
 		File settings = new File(setFile);
