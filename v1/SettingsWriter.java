@@ -14,10 +14,16 @@ public class SettingsWriter {
 	}
 	
 	public void updateGlobalSettings(Project p) {
+        String setDir = (p.getDirectory().toLowerCase().indexOf("dropbox") == -1) ? 
+                        Environment.FS_PATH : Environment.DROPBOX_PATH;
 		String setFile = (p.getDirectory().toLowerCase().indexOf("dropbox") == -1) ? 
                         Environment.DSFS_SETTINGS_PATH : Environment.DSDP_SETTINGS_PATH;
-
+        
 		File settings = new File(setFile);
+        if(!settings.exists()) {
+            File t = new File(setDir);
+            t.mkdirs();
+        }
 		FileWriter fw = null;
 		PrintWriter pw = null;
 		try {
