@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,12 +50,14 @@ public class Merger extends Thread {
     	parent_files = parent.getFiles();
     	child_files = child.getFiles();
     	
-    	for (int i = 0; i < parent_files.size(); i++) {
-    		for (int j = 0; j < child_files.size(); j++) {
-				DSFile parentFile = parent_files.get(i);
-    			DSFile childFile = child_files.get(j);
+    	for (int i = 0; i < child_files.size(); i++) {
+            boolean found_match = false;
+    		for (int j = 0; j < parent_files.size(); j++) {
+				DSFile parentFile = parent_files.get(j);
+    			DSFile childFile = child_files.get(i);
     			
     			if (parentFile.getFileString().equals(childFile.getFileString())) {
+                    found_match = true;
                		String ffullnamep = parentFile.getDirectory() + "/" + parentFile.getFileString();
                 	String ffullnamec = childFile.getDirectory() + "/" + childFile.getFileString();
 					
@@ -71,6 +75,14 @@ public class Merger extends Thread {
 
                 }
     		}
+            if (!found_match) {
+                DSFile childFile = child_files.get(i);
+                String ffullnamec = childFile.getDirectory() + "/" + childFile.getFileString();
+                String ffullnamep = parent.getDirectory() + "/" + childFile.getFileString();
+                copyFile(ffullnamep, ffullnamec);
+                parent.addFile(childFile.getFileString(), childFile.getVersion());
+                GUI.logger.info("Found new file " + ffullnamec + ", copying down to" + ffullnamep);
+            }
     	}
     	GUI.ph.sw.updateProjectSettings(parent);
     }
@@ -83,12 +95,14 @@ public class Merger extends Thread {
     	ArrayList<DSFile> parent_files, child_files;
     	parent_files = parent.getFiles();
     	child_files = child.getFiles();
-    	for (int i = 0; i < parent_files.size(); i++) {
-    		for (int j = 0; j < child_files.size(); j++) {
-    			DSFile parentFile = parent_files.get(i);
-    			DSFile childFile = child_files.get(j);
+    	for (int i = 0; i < child_files.size(); i++) {
+            boolean found_match = false;
+    		for (int j = 0; j < parent_files.size(); j++) {
+    			DSFile parentFile = parent_files.get(j);
+    			DSFile childFile = child_files.get(i);
 
     			if (parentFile.getFileString().equals(childFile.getFileString())) {
+                    found_match = true;
                     String ffullnamep = parentFile.getDirectory() + "/" + parentFile.getFileString();
                     String ffullnamec = childFile.getDirectory() + "/" + childFile.getFileString();
 
@@ -100,7 +114,7 @@ public class Merger extends Thread {
                             GUI.logger.info("Trying merging " + ffullnamec + " into " + ffullnamep + ": Same version, changes made = copy");
                             copyFile(ffullnamep, ffullnamec);
                             // update version
-                            int version = parentFile.getVersion();
+                            int version = childFile.getVersion();
                             version++;
                             parentFile.setVersion(version);
                             childFile.setVersion(version);
@@ -115,7 +129,7 @@ public class Merger extends Thread {
                             GUI.logger.info("Trying merging " + ffullnamec + " into " + ffullnamep + ": Different version, no changes = merge");
                             mergeFiles(ffullnamep, ffullnamec);
                             // update version
-                            int version = parentFile.getVersion();
+                            int version = childFile.getVersion();
                             version++;
                             parentFile.setVersion(version);
                             childFile.setVersion(version);
@@ -123,6 +137,14 @@ public class Merger extends Thread {
                     }
     			}
     		}
+            if (!found_match) {
+                DSFile childFile = child_files.get(i);
+                String ffullnamec = childFile.getDirectory() + "/" + childFile.getFileString();
+                String ffullnamep = parent.getDirectory() + "/" + childFile.getFileString();
+                copyFile(ffullnamep, ffullnamec);
+                parent.addFile(childFile.getFileString(), childFile.getVersion());
+                GUI.logger.info("Found new file " + ffullnamec + ", copying up to" + ffullnamep);
+            }
     	}
         // UPDATE PROJSETTINGS
         GUI.ph.sw.updateProjectSettings(parent);
@@ -221,6 +243,13 @@ public class Merger extends Thread {
         File filea = new File(sfilea);
         File fileb = new File(sfileb);
         
+        if (!filea.exists()) {
+            try {
+                filea.createNewFile();
+            } catch (IOException ex) {
+                
+            }
+        }
         FileChannel source = null;
         FileChannel dest = null;
         try {
@@ -244,5 +273,6 @@ public class Merger extends Thread {
             }
         }
     }
+
 }
 

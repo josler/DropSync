@@ -368,6 +368,7 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_MergeDownButtonActionPerformed
 
     private void AddFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddFileButtonActionPerformed
+        fc.setCurrentDirectory(new File(ph.lookupProject(getSelected()).getDirectory()));
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setMultiSelectionEnabled(true);
         int returnVal = fc.showOpenDialog(this);
@@ -380,7 +381,7 @@ public class GUI extends javax.swing.JFrame {
            ph.sw.updateProjectSettings(proj);
            statusLabel.setText("Added files to " + getSelected());
         }
-        
+        fc.setCurrentDirectory(new File(Environment.FS_PATH));
         fc.setMultiSelectionEnabled(false);
         
     }//GEN-LAST:event_AddFileButtonActionPerformed
