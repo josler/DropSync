@@ -18,13 +18,34 @@ public class DSFile {
 	}
 
 	public void setName(String name) {
-		String[] temp = name.split("\\.");
-        this.name = "";
-        for (int i = 0; i < temp.length-1; i++) {
-            this.name += ("." + temp[i]);
-        }
-        this.name = this.name.substring(1);
-		this.extension = temp[temp.length-1];
+            if(name.indexOf(".") == -1) { // no .'s, simple
+                this.name = name;
+                this.extension = "";
+            }
+            else if (name.startsWith(".")) { // check if hidden
+                String tail = name.substring(1);
+                if (tail.indexOf(".") != -1) { // if rest has .'s in it, split
+                    String[] temp = tail.split("\\.");             
+                    this.name = "";
+                    for (int i = 0; i < temp.length-1; i++) {
+                        this.name += ("." + temp[i]);
+                    }
+                    this.extension = temp[temp.length - 1];
+                }
+                else { // if no more .'s, done
+                    this.name = name;
+                    this.extension = "";
+                }
+            }
+            else { // at least 1 . , not at the start. Split
+                String[] temp = name.split("\\.");
+                this.name = "";
+                for (int i = 0; i < temp.length-1; i++) {
+                    this.name += ("." + temp[i]);
+                }
+                this.name = this.name.substring(1); // no . at start
+                this.extension = temp[temp.length-1];
+            }
 	}
 
 	public String getName() {
@@ -40,7 +61,10 @@ public class DSFile {
 	}
 	
 	public String getFileString() {
-		return (name + "." + extension);
+            if (extension != "")
+                return (name + "." + extension);
+            else // no extension, no .
+                return name;
 	}
 	
 	public int getVersion() {

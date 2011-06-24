@@ -31,10 +31,10 @@ public class Project {
 		this.directory = another.directory;
 		this.ID = another.ID;
 		this.masterID = another.masterID;
-        this.files = new ArrayList<DSFile>();
-        for (int i = 0; i < another.files.size(); i++) {
-            addFile(another.files.get(i).getFileString(),another.files.get(i).getVersion());
-        }
+                this.files = new ArrayList<DSFile>();
+                for (int i = 0; i < another.files.size(); i++) {
+                    addFile(another.files.get(i).getFileString(),another.files.get(i).getVersion());
+                }
 		this.childProjects = new ArrayList<Project>();
 	}
 
@@ -56,13 +56,13 @@ public class Project {
 
 	public void addFile(String file, int Version) {
 		DSFile t = new DSFile(file,directory);
-        t.setVersion(Version);
+                t.setVersion(Version);
 		files.add(t);
 	}
 	
 	public void updateFiles() {
 		for (int f = 0; f < files.size(); f++)
-			files.get(f).setDirectory(directory);
+                    files.get(f).setDirectory(directory);
 	}
 
 	public ArrayList<DSFile> getFiles() {
